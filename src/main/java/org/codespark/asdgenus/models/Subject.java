@@ -1,5 +1,7 @@
 package org.codespark.asdgenus.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -12,6 +14,7 @@ public class Subject {
 
     @ManyToOne
     @JoinColumn
+    @JsonBackReference
     private User user;
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)

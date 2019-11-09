@@ -26,8 +26,8 @@ public class ClassifierService {
     public Result getPrediction(String eegPath) {
 
         eegDataPreprocessing.preProcessEEG(eegPath);
-        featureExtraction.extractFeatures();
-        Result result = classification.classifyASD();
+        String features = featureExtraction.extractFeatures();
+        Result result = classification.classifyASD("features");
         return result;
     }
 

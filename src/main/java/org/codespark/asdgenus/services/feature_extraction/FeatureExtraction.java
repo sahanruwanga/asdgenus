@@ -18,7 +18,7 @@ public class FeatureExtraction {
     @Autowired
     private FilePathFinder filePathFinder;
 
-    public void extractFeatures() {
+    public String extractFeatures() {
 
         String pyPath = filePathFinder.getFeatureExtractionPythonScript();
         String preprocessDataFile = filePathFinder.getPreprocessDataFile();
@@ -37,5 +37,6 @@ public class FeatureExtraction {
         } catch (IOException ex) {
             Logger.getLogger(ResultController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return prediction.get(0);
     }
 }

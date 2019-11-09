@@ -1,5 +1,7 @@
 package org.codespark.asdgenus.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -11,6 +13,7 @@ public class User {
     private Integer id;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Subject> subjects;
 
     private String name;

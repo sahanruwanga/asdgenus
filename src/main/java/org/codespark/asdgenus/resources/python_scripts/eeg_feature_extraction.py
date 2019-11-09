@@ -16,8 +16,6 @@ with open(preprocess_csv_file, 'r') as csvfile:
 csvfile.close()
 
 data_array = np.array(data_array)
-print(data_array.shape)
-print(data_array[0])
 
 features = []
 
@@ -30,7 +28,11 @@ for ch in range(32):
     features.append(round(-np.nansum(pArr * np.log2(pArr)), 9))
 features.append("?")
 
-with open(test_data_file, 'a', newline="") as writeFile:
-    writer = csv.writer(writeFile)
+print(features)
+
+with open(test_data_file, 'a') as writeFile:
+    # with open(test_data_file, 'a', newline="") as writeFile:
+    #     writer = csv.writer(writeFile)
+    writer = csv.writer(writeFile, lineterminator="\n")
     writer.writerow(features)
 writeFile.close()

@@ -30,14 +30,20 @@ public class ResultService {
      */
     public int saveResult(ResultDTO resultDTO) {
 
-        Subject subject = subjectRepository.findById(resultDTO.getSubjectId()).get();
-        EEGData eegData = eegDataRepository.findById(resultDTO.getEegId()).get();
+        Subject subject = null;
+        EEGData eegData = null;
+        if (subjectRepository.findById(resultDTO.getSubjectId()).isPresent())
+            subject = subjectRepository.findById(resultDTO.getSubjectId()).get();
+        if (eegDataRepository.findById(resultDTO.getEegId()).isPresent())
+            eegData = eegDataRepository.findById(resultDTO.getEegId()).get();
         Result result = new Result(resultDTO.getId(), resultDTO.getResult(), resultDTO.getResultDescription(),
                 resultDTO.getDateOfTaken());
-        result.setSubject(subject);
-        result.setEegData(eegData);
-        return resultRepository.save(result).getId();
-
+        if (subject != null && eegData != null) {
+            result.setSubject(subject);
+            result.setEegData(eegData);
+            return resultRepository.save(result).getId();
+        } else
+            return 0;
     }
 
     /**
@@ -48,13 +54,18 @@ public class ResultService {
      */
     public ResultDTO getResultById(int id) {
 
-        Result result = resultRepository.findById(id).get();
-        return new ResultDTO(result.getId(), result.getEegData().getId(), result.getSubject().getId(),
-                result.getResult(), result.getResultDescription(), result.getDateOfTaken());
+        Result result = null;
+        if (resultRepository.findById(id).isPresent()) {
+            result = resultRepository.findById(id).get();
+            return new ResultDTO(result.getId(), result.getEegData().getId(), result.getSubject().getId(),
+                    result.getResult(), result.getResultDescription(), result.getDateOfTaken());
+        }else
+            return new ResultDTO();
     }
 
-    public void getAll() {
+    public ResultDTO getAll(int userId) {
         // Todo
+        return new ResultDTO();
     }
 
     /**

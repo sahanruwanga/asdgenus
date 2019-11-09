@@ -4,16 +4,18 @@ import org.codespark.asdgenus.dtos.SubjectDTO;
 import org.codespark.asdgenus.models.Subject;
 import org.codespark.asdgenus.models.User;
 import org.codespark.asdgenus.repositories.SubjectRepository;
+import org.codespark.asdgenus.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SubjectService {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
     private SubjectRepository subjectRepository;
@@ -24,10 +26,10 @@ public class SubjectService {
      * @param subjectDto
      * @return
      */
-    public int saveSubject(SubjectDTO subjectDto) {
+    public int saveSubject(int uid, SubjectDTO subjectDto) {
 
         Subject newSub = new Subject();
-        User user = userService.confirmUserPresent();
+        User user = userRepository.findById(uid).get();
         newSub.setName(subjectDto.getName());
         newSub.setAge(subjectDto.getAge());
         newSub.setGender(subjectDto.getGender());
@@ -77,10 +79,11 @@ public class SubjectService {
         return new SubjectDTO(subject.getId(), subject.getName(), subject.getAge(), subject.getGender());
     }
 
-    public ArrayList<Subject> getAllSubjects() {
+    public List<Subject> getAllSubjects(int userId) {
 
-        ArrayList<Subject> subjects = new ArrayList<>();
-        subjectRepository.findAll().forEach(subjects::add);
+        List<Subject> subjects = subjectRepository.findAllByUserId(userId);
+//        ArrayList<Subject> subjects = new ArrayList<>();
+//        subjectRepository.findAll().forEach(subjects::add);
 //        for (Subject subject : subjectIterable)
 //            subjects.add(subject);
         return subjects;

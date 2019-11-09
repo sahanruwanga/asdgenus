@@ -1,14 +1,13 @@
 package org.codespark.asdgenus.controllers;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController("/visualizer")
+@CrossOrigin(origins = "*")
 public class VisualizerController {
 
     @PostMapping("/plot/{plotType}")
-    public String plotVisualization(@RequestParam String plotType) {
+    public String plotVisualization(@RequestHeader("uid") int uid, @RequestParam String plotType) {
         return "Plot type : " + plotType;
     }
 }

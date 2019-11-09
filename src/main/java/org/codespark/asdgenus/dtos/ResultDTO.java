@@ -18,6 +18,9 @@ public class ResultDTO {
         this.dateOfTaken = dateOfTaken;
     }
 
+    public ResultDTO() {
+    }
+
     public int getId() {
         return id;
     }

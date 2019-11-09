@@ -10,9 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/subject")
+@CrossOrigin(origins = "*")
 public class SubjectController {
 
     @Autowired
@@ -20,14 +22,14 @@ public class SubjectController {
 
     @PostMapping(path = "/save", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Integer> saveSubject(@RequestBody SubjectDTO subjectDto) {
+    public ResponseEntity<Integer> saveSubject(@RequestHeader("uid") int uid, @RequestBody SubjectDTO subjectDTO) {
 
-        return new ResponseEntity<>(subjectService.saveSubject(subjectDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(subjectService.saveSubject(uid, subjectDTO), HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<SubjectDTO> updateSubject(@PathVariable("id") int id,
+    public ResponseEntity<SubjectDTO> updateSubject(@RequestHeader("uid") int uid, @PathVariable("id") int id,
                                                 @RequestBody SubjectDTO subjectDTO){
 
         return new ResponseEntity<>(subjectService.updateSubject(id, subjectDTO), HttpStatus.OK);
@@ -35,7 +37,7 @@ public class SubjectController {
 
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteSubject(@PathVariable("id") int id) {
+    public String deleteSubject(@RequestHeader("uid") int uid, @PathVariable("id") int id) {
 
         subjectService.deleteSubject(id);
         return "Delete successful";
@@ -43,15 +45,16 @@ public class SubjectController {
 
     @GetMapping("/get/{id}")
     @ResponseStatus(HttpStatus.FOUND)
-    public ResponseEntity<SubjectDTO> getSubjectById(@PathVariable("id") int id){
+    public ResponseEntity<SubjectDTO> getSubjectById(@RequestHeader("uid") int uid, @PathVariable("id") int id){
 
         return new ResponseEntity<>(subjectService.getSubjectById(id), HttpStatus.FOUND);
     }
 
-    @GetMapping("/get")
-    public ArrayList<Subject> getSubjects() {
+    @GetMapping("/get-all/{userId}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ResponseEntity<List<Subject>> getSubjects(@RequestHeader("uid") int uid, @PathVariable("userId") int userId) {
 
         // Todo
-        return subjectService.getAllSubjects();
+        return new ResponseEntity<>(subjectService.getAllSubjects(userId), HttpStatus.FOUND);
     }
 }

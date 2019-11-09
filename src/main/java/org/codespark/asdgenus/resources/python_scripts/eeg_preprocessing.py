@@ -43,8 +43,10 @@ preprocess_data_file = sys.argv[2]
 data = eeg_filter(eeg_file)
 data_array = remove_eye_blink(data)
 
-with open(preprocess_data_file, 'w', newline="") as writeFile:
-    writer = csv.writer(writeFile)
+with open(preprocess_data_file, 'w') as writeFile:
+    # with open(preprocess_data_file, 'w', newline="") as writeFile:
+    # writer = csv.writer(writeFile)
+    writer = csv.writer(writeFile, lineterminator="\n")
     writer.writerow(get_channel_names(eeg_file))
     for i in range(data_array.shape[0]):
         writer.writerow(data_array[i])

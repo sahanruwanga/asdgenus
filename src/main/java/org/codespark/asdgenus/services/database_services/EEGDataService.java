@@ -72,6 +72,7 @@ public class EEGDataService {
             else
                 fileStorageService.storeFile(files[i]);
         }
+//        vhdrFilePath = fileStorageService.storeFile(file);
         EEGDataDTO eegDataDTO = new EEGDataDTO();
         eegDataDTO.setDataLocation(vhdrFilePath);
         return eegDataDTO;

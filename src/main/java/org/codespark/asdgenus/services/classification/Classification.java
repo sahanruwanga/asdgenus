@@ -22,7 +22,9 @@ public class Classification {
     @Autowired
     private LearningModel learningModel;
 
-    public Result classifyASD() {
+    public Result classifyASD(String features) {
+
+//        String testSet[] = features.substring(1, features.length()-1).split(",");
 
         DataSource testData = null;
         String prediction = null;
@@ -33,11 +35,10 @@ public class Classification {
             test.setClassIndex(test.numAttributes() - 1);
 
             MultilayerPerceptron mlp = (MultilayerPerceptron) learningModel.getModel(MULTILAYER_PERCEPTRON);
-            for (int i = 2; i < test.numInstances(); i++) {
-                Instance inst = test.instance(i);
-                output = mlp.classifyInstance(inst);
-                prediction = test.classAttribute().value((int) output);
-            }
+            // Getting the last row of the csv as the test data
+            Instance inst = test.instance(test.numInstances()-1);
+            output = mlp.classifyInstance(inst);
+            prediction = test.classAttribute().value((int) output);
         } catch (Exception ignored) {
         }
         return ResultBuilder.getInstance().buildResult(prediction);
