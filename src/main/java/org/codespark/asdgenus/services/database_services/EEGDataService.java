@@ -6,9 +6,13 @@ import org.codespark.asdgenus.models.Subject;
 import org.codespark.asdgenus.repositories.EEGDataRepository;
 import org.codespark.asdgenus.repositories.SubjectRepository;
 import org.codespark.asdgenus.services.FileStorageService;
+import org.codespark.asdgenus.services.visualization.VisualizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class EEGDataService {
@@ -22,6 +26,12 @@ public class EEGDataService {
     @Autowired
     private FileStorageService fileStorageService;
 
+    @Autowired
+    private SubjectService subjectService;
+
+    @Autowired
+    private VisualizationService visualizationService;
+
     /**
      * Save new EEG data in db
      *
@@ -32,9 +42,28 @@ public class EEGDataService {
 
         Subject subject = subjectRepository.findById(eegDataDTO.getSubjectId()).get();
         EEGData eegData = new EEGData(eegDataDTO.getId(), eegDataDTO.getNumberOfChannels(),
-                eegDataDTO.getChannelNames(), eegDataDTO.getDuration(), eegDataDTO.getRecordedDate(), eegDataDTO.getDataLocation());
+                eegDataDTO.getChannelNames(), eegDataDTO.getDuration(), eegDataDTO.getRecordedDate(),
+                eegDataDTO.getDataLocation(), eegDataDTO.getSignalLocation());
         eegData.setSubject(subject);
         return eegDataRepository.save(eegData).getId();
+    }
+
+    /**
+     * Save new EEG data in db for the given subject ID
+     *
+     * @param eegDataDTO
+     * @return
+     */
+    public EEGData saveForSubject(EEGDataDTO eegDataDTO, int subjectId) {
+
+        Subject subject = null;
+        if (subjectRepository.findById(subjectId).isPresent())
+             subject = subjectRepository.findById(subjectId).get();
+        EEGData eegData = new EEGData(eegDataDTO.getId(), eegDataDTO.getNumberOfChannels(),
+                eegDataDTO.getChannelNames(), eegDataDTO.getDuration(), eegDataDTO.getRecordedDate(),
+                eegDataDTO.getDataLocation(), eegDataDTO.getSignalLocation());
+        eegData.setSubject(subject);
+        return eegDataRepository.save(eegData);
     }
 
     /**
@@ -47,24 +76,56 @@ public class EEGDataService {
 
         EEGData eegData = eegDataRepository.findById(id).get();
         return new EEGDataDTO(eegData.getId(), eegData.getNumberOfChannels(), eegData.getSubject().getId(),
-                eegData.getChannelNames(), eegData.getDuration(), eegData.getRecordedDate(), eegData.getDataLocation());
+                eegData.getChannelNames(), eegData.getDuration(), eegData.getRecordedDate(),
+                eegData.getDataLocation(), eegData.getSignalLocation());
     }
 
-    public void getAll() {
-        // Todo
+    /**
+     * Get all eeg data for the given user ID
+     *
+     * @param userId
+     * @return
+     */
+    public List<EEGDataDTO> getAll(int userId) {
+
+        List<Subject> subjects = subjectService.getAllSubjects(userId);
+        List<EEGData> eegDataList = null;
+        List<EEGDataDTO> eegDataDTOList = null;
+        if (!subjects.isEmpty()) {
+            eegDataList = new ArrayList<>();
+            for (Subject subject : subjects) {
+                eegDataRepository.findAllBySubjectId(subject.getId()).forEach(eegDataList::add);
+            }
+        }
+        if (eegDataList != null) {
+            eegDataDTOList = new ArrayList<>();
+            for (EEGData eeg : eegDataList) {
+                eegDataDTOList.add(new EEGDataDTO(eeg.getId(), eeg.getNumberOfChannels(), eeg.getSubject().getId(),
+                        eeg.getChannelNames(), eeg.getDuration(), eeg.getRecordedDate(), eeg.getDataLocation(),
+                        eeg.getSignalLocation()));
+            }
+        }
+        return eegDataDTOList;
     }
 
     /**
      * Delete required saved EEG data
      *
-     * @param id
+     * @param eegId
      */
-    public void delete(int id) {
+    public int delete(int eegId) {
 
-        eegDataRepository.deleteById(id);
+        eegDataRepository.deleteById(eegId);
+        return eegId;
     }
 
-    public EEGDataDTO uploadEEG(MultipartFile[] files){
+    /**
+     * Upload and save the given EEG data
+     *
+     * @param files
+     * @return
+     */
+    public EEGDataDTO uploadEEG(int uid, MultipartFile[] files) {
         String vhdrFilePath = "";
         for (int i = 0; i < files.length; i++) {
             if (files[i].getOriginalFilename().endsWith("vhdr"))
@@ -75,6 +136,7 @@ public class EEGDataService {
 //        vhdrFilePath = fileStorageService.storeFile(file);
         EEGDataDTO eegDataDTO = new EEGDataDTO();
         eegDataDTO.setDataLocation(vhdrFilePath);
+        eegDataDTO.setSignalLocation(visualizationService.plotEEGSignal(uid, vhdrFilePath));
         return eegDataDTO;
     }
 }

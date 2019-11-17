@@ -1,6 +1,7 @@
 package org.codespark.asdgenus.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -18,9 +19,11 @@ public class Subject {
     private User user;
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<EEGData> eegData;
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Result> results;
 
     private int age;

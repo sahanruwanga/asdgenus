@@ -1,12 +1,14 @@
 package org.codespark.asdgenus.controllers;
 
-import org.codespark.asdgenus.dtos.EEGDataDTO;
 import org.codespark.asdgenus.dtos.ResultDTO;
+import org.codespark.asdgenus.dtos.ResultSavingDTO;
 import org.codespark.asdgenus.services.database_services.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/result")
@@ -16,11 +18,12 @@ public class ResultController {
     @Autowired
     private ResultService resultService;
 
-    @PostMapping(path = "/save", consumes = "application/json")
+    @PostMapping(path = "/save-for-subject", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Integer> save(@RequestHeader("uid") int uid, @RequestBody ResultDTO resultDTO) {
+    public ResponseEntity<Integer> saveForExistingSubject(@RequestHeader("uid") int uid,
+                                                   @RequestBody ResultSavingDTO resultForSubjectDTO) {
 
-        return new ResponseEntity<>(resultService.saveResult(resultDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(resultService.saveForSubject(uid, resultForSubjectDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/get/{id}")
@@ -30,18 +33,18 @@ public class ResultController {
         return new ResponseEntity<>(resultService.getResultById(id), HttpStatus.FOUND);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @GetMapping("/get-all/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteSubject(@RequestHeader("uid") int uid, @PathVariable("id") int id) {
+    public ResponseEntity<List<ResultDTO>> getAllResult(@RequestHeader("uid") int uid, @PathVariable("userId") int userId) {
 
-        resultService.deleteResult(id);
-        return "Delete successful";
+        return new ResponseEntity<>(resultService.getAll(userId), HttpStatus.OK);
     }
 
-    @GetMapping("/get-all/{userId}")
-    @ResponseStatus(HttpStatus.FOUND)
-    public ResponseEntity<ResultDTO> getAllResult(@RequestHeader("uid") int uid, @PathVariable("userId") int userId) {
+    @DeleteMapping("/delete/{resultId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Integer> deleteResult(@RequestHeader("uid") int uid,
+                                                 @PathVariable("resultId") int resultId) {
 
-        return new ResponseEntity<>(resultService.getAll(userId), HttpStatus.FOUND);
+        return new ResponseEntity<>(resultService.deleteResult(resultId), HttpStatus.OK);
     }
 }

@@ -1,5 +1,8 @@
 package org.codespark.asdgenus.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,10 +13,12 @@ public class EEGData {
     private int id;
 
     @OneToOne(mappedBy = "eegData", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Result result;
 
     @ManyToOne
     @JoinColumn
+    @JsonBackReference
     private Subject subject;
 
     private int numberOfChannels;
@@ -21,14 +26,17 @@ public class EEGData {
     private String duration;
     private String recordedDate;
     private String dataLocation;
+    private String signalLocation;
 
-    public EEGData(int eegId, int numberOfChannels, String[] channelNames, String duration, String recordedDate, String dataLocation) {
+    public EEGData(int eegId, int numberOfChannels, String[] channelNames, String duration,
+                   String recordedDate, String dataLocation, String signalLocation) {
         this.id = eegId;
         this.numberOfChannels = numberOfChannels;
         this.channelNames = channelNames;
         this.duration = duration;
         this.recordedDate = recordedDate;
         this.dataLocation = dataLocation;
+        this.signalLocation = signalLocation;
     }
 
     public EEGData() {
@@ -96,5 +104,13 @@ public class EEGData {
 
     public void setDataLocation(String dataLocation) {
         this.dataLocation = dataLocation;
+    }
+
+    public String getSignalLocation() {
+        return signalLocation;
+    }
+
+    public void setSignalLocation(String signalLocation) {
+        this.signalLocation = signalLocation;
     }
 }

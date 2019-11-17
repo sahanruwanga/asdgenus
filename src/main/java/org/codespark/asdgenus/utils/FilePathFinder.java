@@ -15,6 +15,9 @@ public class FilePathFinder {
     @Value("${python.feature-extraction}")
     private String featureExtractionScript;
 
+    @Value("${python.plot-eeg-signal}")
+    private String plotEEGScript;
+
     @Value("${data.preprocess}")
     private String preprocessDataFile;
 
@@ -36,6 +39,9 @@ public class FilePathFinder {
     @Value("${model.nb}")
     private String naiveBayesModel;
 
+    @Value("${eeg.signal.base-path}")
+    private String eegSignalBasePath;
+
     public String getTestPythonScript() {
         return testPath;
     }
@@ -46,6 +52,10 @@ public class FilePathFinder {
 
     public String getFeatureExtractionPythonScript() {
         return featureExtractionScript;
+    }
+
+    public String getPlotEEGScript() {
+        return plotEEGScript;
     }
 
     public String getPreprocessDataFile() {
@@ -74,5 +84,9 @@ public class FilePathFinder {
 
     public String getNaiveBayesModel() {
         return naiveBayesModel;
+    }
+
+    public String getEegSignalBasePath() {
+        return eegSignalBasePath;
     }
 }

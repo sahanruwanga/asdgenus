@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -62,9 +64,22 @@ public class SubjectService {
      *
      * @param id
      */
-    public void deleteSubject(int id) {
+    public int deleteSubject(int id) {
 
         subjectRepository.deleteById(id);
+        return id;
+    }
+
+    /**
+     * Retrieve the required subject DTO from the subject id
+     *
+     * @param id
+     * @return
+     */
+    public SubjectDTO getSubjectDTOById(int id) {
+
+        Subject subject = this.getSubjectById(id);
+        return new SubjectDTO(subject.getId(), subject.getName(), subject.getAge(), subject.getGender());
     }
 
     /**
@@ -73,21 +88,32 @@ public class SubjectService {
      * @param id
      * @return
      */
-    public SubjectDTO getSubjectById(int id) {
+    public Subject getSubjectById(int id) {
 
-        Subject subject = subjectRepository.findById(id).get();
-        return new SubjectDTO(subject.getId(), subject.getName(), subject.getAge(), subject.getGender());
+        Subject subject = null;
+        if (subjectRepository.findById(id).isPresent())
+            subject = subjectRepository.findById(id).get();
+        return subject;
     }
 
     public List<Subject> getAllSubjects(int userId) {
 
-        List<Subject> subjects = subjectRepository.findAllByUserId(userId);
-//        ArrayList<Subject> subjects = new ArrayList<>();
-//        subjectRepository.findAll().forEach(subjects::add);
-//        for (Subject subject : subjectIterable)
-//            subjects.add(subject);
+        List<Subject> subjects = new ArrayList<>();
+        subjectRepository.findAllByUserId(userId).forEach(subjects::add);
         return subjects;
     }
 
+    public List<Integer> getAllIds(int userId) {
 
+        List<Subject> subjects = new ArrayList<>();
+        List<Integer> ids = null;
+        subjectRepository.findAllByUserId(userId).forEach(subjects::add);
+        if (!subjects.isEmpty()) {
+            ids = new ArrayList<>();
+            for (Subject subject : subjects) {
+                ids.add(subject.getId());
+            }
+        }
+        return ids;
+    }
 }

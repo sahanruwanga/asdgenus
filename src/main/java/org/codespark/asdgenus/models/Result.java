@@ -1,5 +1,7 @@
 package org.codespark.asdgenus.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,10 +13,12 @@ public class Result {
 
     @OneToOne
     @JoinColumn
+    @JsonBackReference
     private EEGData eegData;
 
     @ManyToOne
     @JoinColumn
+    @JsonBackReference
     private Subject subject;
 
     private String result;

@@ -9,8 +9,10 @@ public class EEGDataDTO {
     private String duration;
     private String recordedDate;
     private String dataLocation;
+    private String signalLocation;
 
-    public EEGDataDTO(int id, int numberOfChannels, int subjectId, String[] channelNames, String duration, String recordedDate, String dataLocation) {
+    public EEGDataDTO(int id, int numberOfChannels, int subjectId, String[] channelNames,
+                      String duration, String recordedDate, String dataLocation, String signalLocation) {
         this.id = id;
         this.numberOfChannels = numberOfChannels;
         this.subjectId = subjectId;
@@ -18,6 +20,7 @@ public class EEGDataDTO {
         this.duration = duration;
         this.recordedDate = recordedDate;
         this.dataLocation = dataLocation;
+        this.signalLocation = signalLocation;
     }
 
     public EEGDataDTO() {
@@ -77,5 +80,13 @@ public class EEGDataDTO {
 
     public void setDataLocation(String dataLocation) {
         this.dataLocation = dataLocation;
+    }
+
+    public String getSignalLocation() {
+        return signalLocation;
+    }
+
+    public void setSignalLocation(String signalLocation) {
+        this.signalLocation = signalLocation;
     }
 }

@@ -24,7 +24,7 @@ public class UserController {
 
     @PostMapping(path = "/login", consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Integer> login(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
 
         return new ResponseEntity<>(this.getUserService().loginUser(userDTO), HttpStatus.OK);
     }
@@ -32,8 +32,15 @@ public class UserController {
     @GetMapping("/get/{email}")
     public int getUser(@PathVariable("email") String email){
 
-        int id = userService.getUser(email);
+        int id = userService.getUserByEmail(email);
         return id;
+    }
+
+    @GetMapping("/id/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<UserDTO> getUser(@RequestHeader("uid") int uid, @PathVariable("userId") int userId){
+
+        return new ResponseEntity<>(this.getUserService().getUserById(userId), HttpStatus.OK);
     }
 
     public UserService getUserService() {

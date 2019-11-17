@@ -18,19 +18,21 @@ public class UserService {
 
     public int registerUser(UserDTO userDTO) {
 
-        User user = new User();
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(getHashedPassword(userDTO.getPassword()));
-        return getUserRepository().save(user).getId();
+            User user = new User();
+            user.setName(userDTO.getName());
+            user.setEmail(userDTO.getEmail());
+            user.setPassword(getHashedPassword(userDTO.getPassword()));
+            return getUserRepository().save(user).getId();
     }
 
-    public int loginUser(UserDTO userDTO) {
+    public UserDTO loginUser(UserDTO userDTO) {
 
-        if (verifyUser(userDTO) == null)
-            return 0;
-        else
-            return verifyUser(userDTO).getId();
+        User user = verifyUser(userDTO);
+        if (user == null)
+            return null;
+        else {
+            return new UserDTO(user.getId(), user.getName(), user.getEmail(), null);
+        }
     }
 
     private User verifyUser(UserDTO userDTO) {
@@ -61,12 +63,18 @@ public class UserService {
         return sb.toString();
     }
 
-    public int getUser(String email) {
+    public int getUserByEmail(String email) {
 
         return userRepository.findByEmail(email).getId();
     }
 
-    public void getUser() {
+    public UserDTO getUserById(int uid){
+
+        User user = userRepository.findById(uid).get();
+        return new UserDTO(user.getId(), user.getName(), user.getEmail(), null);
+    }
+
+    public void getUserByEmail() {
     }
 
     public void updateUser() {
