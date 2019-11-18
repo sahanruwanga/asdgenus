@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
@@ -68,7 +69,7 @@ public class LearningModel {
             if (classifierType.equals(RANDOM_FOREST))
                 classifier = new RandomForest();
             else if (classifierType.equals(MULTILAYER_PERCEPTRON))
-                classifier = new MultilayerPerceptron();
+                classifier = AbstractClassifier.forName("weka.classifiers.functions.MultilayerPerceptron", new String[]{"-L", "0.30858093642150297", "-M", "0.22943139932442275", "-B", "-H", "i", "-C", "-R", "-S", "1"});
             else if (classifierType.equals(NAIVE_BAYES))
                 classifier = new NaiveBayes();
             else if (classifierType.equals(LOGISTIC)) {

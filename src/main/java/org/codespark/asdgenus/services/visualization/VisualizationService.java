@@ -41,9 +41,9 @@ public class VisualizationService {
         } catch (IOException ex) {
             Logger.getLogger(ResultController.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        if (temp.size() != 0 && temp.get(0).equals("ok"))
-//            return signalLocation;
-//        else
-        return filePathFinder.getEegSignalBasePath() + "/1.jpg";
+        if (temp.size() != 0 && temp.get(0).equals("ok"))
+            return signalLocation;
+        else
+        return "";
     }
 }

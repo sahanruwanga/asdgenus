@@ -1,5 +1,6 @@
 package org.codespark.asdgenus.services.classification;
 
+import org.codespark.asdgenus.dtos.ResultDTO;
 import org.codespark.asdgenus.models.Result;
 import org.codespark.asdgenus.services.learning_models.LearningModel;
 import org.codespark.asdgenus.utils.FilePathFinder;
@@ -22,7 +23,7 @@ public class Classification {
     @Autowired
     private LearningModel learningModel;
 
-    public Result classifyASD(String features) {
+    public ResultDTO classifyASD(String features) {
 
 //        String testSet[] = features.substring(1, features.length()-1).split(",");
 
@@ -41,6 +42,6 @@ public class Classification {
             prediction = test.classAttribute().value((int) output);
         } catch (Exception ignored) {
         }
-        return ResultBuilder.getInstance().buildResult(prediction);
+        return ResultBuilder.getInstance().buildResultDTO(prediction);
     }
 }

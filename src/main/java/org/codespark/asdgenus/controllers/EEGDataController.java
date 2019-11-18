@@ -1,7 +1,6 @@
 package org.codespark.asdgenus.controllers;
 
 import org.codespark.asdgenus.dtos.EEGDataDTO;
-import org.codespark.asdgenus.models.EEGData;
 import org.codespark.asdgenus.services.database_services.EEGDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

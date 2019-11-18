@@ -1,8 +1,10 @@
 package org.codespark.asdgenus.controllers;
 
-import org.codespark.asdgenus.models.Result;
+import org.codespark.asdgenus.dtos.ResultDTO;
 import org.codespark.asdgenus.services.ClassifierService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,9 +16,10 @@ public class ClassifierController {
     private ClassifierService classifierService;
 
     @PostMapping("/predict")
-    public Result predictASD(@RequestHeader("uid") int uid, @RequestParam("eegPath") String eegPath) {
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<ResultDTO> predictASD(@RequestHeader("uid") int uid,
+                                                @RequestParam("eegPath") String eegPath) {
 
-        Result result = classifierService.getPrediction(eegPath);
-        return result;
+        return new ResponseEntity<>(classifierService.getPrediction(eegPath), HttpStatus.OK);
     }
 }

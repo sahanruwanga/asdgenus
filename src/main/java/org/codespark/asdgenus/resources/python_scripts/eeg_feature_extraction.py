@@ -19,11 +19,11 @@ data_array = np.array(data_array)
 
 features = []
 
-for ch in range(32):
+for ch in [14]:
     features.append(round(np.mean(data_array[:, ch]), 9))
-for ch in range(32):
-    features.append(round(np.std(data_array[:, ch]), 9))
-for ch in range(32):
+# for ch in range(32):
+#     features.append(round(np.std(data_array[:, ch]), 9))
+for ch in [5, 16]:
     pArr = data_array[:, ch] / sum(data_array[:, ch])
     features.append(round(-np.nansum(pArr * np.log2(pArr)), 9))
 features.append("?")

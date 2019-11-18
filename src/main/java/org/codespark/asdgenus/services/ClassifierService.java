@@ -1,5 +1,6 @@
 package org.codespark.asdgenus.services;
 
+import org.codespark.asdgenus.dtos.ResultDTO;
 import org.codespark.asdgenus.models.Result;
 import org.codespark.asdgenus.services.classification.Classification;
 import org.codespark.asdgenus.services.pre_processing.EEGDataPreprocessing;
@@ -23,12 +24,11 @@ public class ClassifierService {
     @Autowired
     private Classification classification;
 
-    public Result getPrediction(String eegPath) {
+    public ResultDTO getPrediction(String eegPath) {
 
         eegDataPreprocessing.preProcessEEG(eegPath);
         String features = featureExtraction.extractFeatures();
-        Result result = classification.classifyASD("features");
-        return result;
+        return classification.classifyASD("features");
     }
 
     private String saveAndReturnLocation(MultipartFile[] files) {
