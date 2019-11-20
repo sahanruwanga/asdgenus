@@ -26,7 +26,7 @@ public class FeatureExtraction {
         String venvPath = filePathFinder.getVenvLocation();
         String ret;
         ArrayList<String> prediction = new ArrayList<>();
-        ProcessBuilder processBuilder = new ProcessBuilder(venvPath, pyPath, preprocessDataFile, testDataFile);
+        ProcessBuilder processBuilder = new ProcessBuilder().command(venvPath, pyPath, preprocessDataFile, testDataFile);
 
         Process process;
         try {

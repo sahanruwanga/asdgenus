@@ -60,7 +60,7 @@ public class FilePathFinder {
     }
 
     public String getPlotEEGScript() {
-        return plotEEGScript;
+        return new File(plotEEGScript).getAbsolutePath();
     }
 
     public String getPreprocessDataFile() {

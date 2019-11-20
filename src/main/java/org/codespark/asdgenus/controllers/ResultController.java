@@ -20,7 +20,7 @@ public class ResultController {
 
     @PostMapping(path = "/save-for-subject", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Integer> saveForExistingSubject(@RequestHeader("uid") int uid,
+    public ResponseEntity<ResultDTO> saveForExistingSubject(@RequestHeader("uid") int uid,
                                                    @RequestBody ResultSavingDTO resultForSubjectDTO) {
 
         return new ResponseEntity<>(resultService.saveForSubject(uid, resultForSubjectDTO), HttpStatus.CREATED);
@@ -38,6 +38,13 @@ public class ResultController {
     public ResponseEntity<List<ResultDTO>> getAllResult(@RequestHeader("uid") int uid, @PathVariable("userId") int userId) {
 
         return new ResponseEntity<>(resultService.getAll(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-all-subject/{subjectId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ResultDTO>> getAllResultForSubject(@RequestHeader("uid") int uid, @PathVariable("subjectId") int subjectId) {
+
+        return new ResponseEntity<>(resultService.getAllForSubject(subjectId), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{resultId}")

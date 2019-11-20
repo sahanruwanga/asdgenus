@@ -38,6 +38,7 @@ public class Classification {
             MultilayerPerceptron mlp = (MultilayerPerceptron) learningModel.getModel(MULTILAYER_PERCEPTRON);
             // Getting the last row of the csv as the test data
             Instance inst = test.instance(test.numInstances()-1);
+//            Instance inst1 =
             output = mlp.classifyInstance(inst);
             prediction = test.classAttribute().value((int) output);
         } catch (Exception ignored) {

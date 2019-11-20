@@ -40,14 +40,11 @@ public class ResultService {
      * @param resultSavingDTO
      * @return
      */
-    public int saveForSubject(int uid, ResultSavingDTO resultSavingDTO) {
+    public ResultDTO saveForSubject(int uid, ResultSavingDTO resultSavingDTO) {
 
         EEGDataDTO eegDataDTO = new EEGDataDTO(resultSavingDTO.getEegId(), resultSavingDTO.getNumberOfChannels(),
                 resultSavingDTO.getSubjectId(), resultSavingDTO.getChannelNames(), resultSavingDTO.getDuration(),
                 resultSavingDTO.getRecordedDate(), resultSavingDTO.getDataLocation(), resultSavingDTO.getSignalLocation());
-        ResultDTO resultDTO = new ResultDTO(resultSavingDTO.getResultId(), resultSavingDTO.getEegId(),
-                resultSavingDTO.getSubjectId(), resultSavingDTO.getResult(), resultSavingDTO.getResultDescription(),
-                resultSavingDTO.getDateOfTaken());
         int subjectId = resultSavingDTO.getSubjectId();
         Subject subject = null;
         int subId;
@@ -61,14 +58,16 @@ public class ResultService {
         }
 
         EEGData eegData = eegDataService.saveForSubject(eegDataDTO, subId);
-        Result result = new Result(resultDTO.getId(), resultDTO.getResult(), resultDTO.getResultDescription(),
-                resultDTO.getDateOfTaken());
+        Result result = new Result(resultSavingDTO.getResultId(), resultSavingDTO.getResult(), resultSavingDTO.getResultDescription(),
+                resultSavingDTO.getDateOfTaken());
         if (subject != null && eegData != null) {
             result.setSubject(subject);
             result.setEegData(eegData);
-            return resultRepository.save(result).getId();
+            Result newResult = resultRepository.save(result);
+            return new ResultDTO(newResult.getId(), eegData.getId(), subId, newResult.getResult(),
+                    newResult.getResultDescription(), newResult.getDateOfTaken());
         } else
-            return 0;
+            return null;
     }
 
     /**
@@ -106,6 +105,27 @@ public class ResultService {
             }
         }
         if (results != null) {
+            resultDTOs = new ArrayList<>();
+            for (Result rs : results) {
+                resultDTOs.add(new ResultDTO(rs.getId(), rs.getEegData().getId(), rs.getSubject().getId(),
+                        rs.getResult(), rs.getResultDescription(), rs.getDateOfTaken()));
+            }
+        }
+        return resultDTOs;
+    }
+
+    /**
+     * Get all results for the given subject of the user
+     *
+     * @param subjectId
+     * @return
+     */
+    public List<ResultDTO> getAllForSubject(int subjectId) {
+
+        List<Result> results = new ArrayList<>();
+        List<ResultDTO> resultDTOs = null;
+        resultRepository.findAllBySubjectId(subjectId).forEach(results::add);
+        if (!results.isEmpty()) {
             resultDTOs = new ArrayList<>();
             for (Result rs : results) {
                 resultDTOs.add(new ResultDTO(rs.getId(), rs.getEegData().getId(), rs.getSubject().getId(),

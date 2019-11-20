@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Entity
 public class EEGData {
 
+    @TableGenerator(name = "eegdata", initialValue = 3500)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

@@ -7,6 +7,7 @@ import javax.persistence.*;
 @Entity
 public class Result {
 
+    @TableGenerator(name = "result", initialValue = 4500)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

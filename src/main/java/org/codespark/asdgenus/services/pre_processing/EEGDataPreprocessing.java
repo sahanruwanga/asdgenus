@@ -25,7 +25,7 @@ public class EEGDataPreprocessing {
         String venvPath = filePathFinder.getVenvLocation();
         String ret;
         ArrayList<String> prediction = new ArrayList<>();
-        ProcessBuilder processBuilder = new ProcessBuilder(venvPath, pyPath, eegFilePath, preprocessDataFile);
+        ProcessBuilder processBuilder = new ProcessBuilder().command(venvPath, pyPath, eegFilePath, preprocessDataFile);
 
         Process process;
         try {

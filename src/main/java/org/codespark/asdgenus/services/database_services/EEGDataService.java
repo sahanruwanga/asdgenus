@@ -7,6 +7,7 @@ import org.codespark.asdgenus.repositories.EEGDataRepository;
 import org.codespark.asdgenus.repositories.SubjectRepository;
 import org.codespark.asdgenus.services.FileStorageService;
 import org.codespark.asdgenus.services.visualization.VisualizationService;
+import org.codespark.asdgenus.utils.TimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,7 +59,7 @@ public class EEGDataService {
 
         Subject subject = null;
         if (subjectRepository.findById(subjectId).isPresent())
-             subject = subjectRepository.findById(subjectId).get();
+            subject = subjectRepository.findById(subjectId).get();
         EEGData eegData = new EEGData(eegDataDTO.getId(), eegDataDTO.getNumberOfChannels(),
                 eegDataDTO.getChannelNames(), eegDataDTO.getDuration(), eegDataDTO.getRecordedDate(),
                 eegDataDTO.getDataLocation(), eegDataDTO.getSignalLocation());
@@ -100,9 +101,11 @@ public class EEGDataService {
         if (eegDataList != null) {
             eegDataDTOList = new ArrayList<>();
             for (EEGData eeg : eegDataList) {
-                eegDataDTOList.add(new EEGDataDTO(eeg.getId(), eeg.getNumberOfChannels(), eeg.getSubject().getId(),
+                EEGDataDTO eegDataDTO = new EEGDataDTO(eeg.getId(), eeg.getNumberOfChannels(), eeg.getSubject().getId(),
                         eeg.getChannelNames(), eeg.getDuration(), eeg.getRecordedDate(), eeg.getDataLocation(),
-                        eeg.getSignalLocation()));
+                        eeg.getSignalLocation());
+                eegDataDTO.setSignalImage(visualizationService.constructImage(eeg.getSignalLocation()));
+                eegDataDTOList.add(eegDataDTO);
             }
         }
         return eegDataDTOList;
@@ -136,7 +139,13 @@ public class EEGDataService {
 //        vhdrFilePath = fileStorageService.storeFile(file);
         EEGDataDTO eegDataDTO = new EEGDataDTO();
         eegDataDTO.setDataLocation(vhdrFilePath);
-        eegDataDTO.setSignalLocation(visualizationService.plotEEGSignal(uid, vhdrFilePath));
+        ArrayList<String> outputs = visualizationService.plotEEGSignal(uid, vhdrFilePath);
+        if (outputs != null) {
+            eegDataDTO.setSignalLocation(outputs.get(3));
+            eegDataDTO.setDuration(TimeFormatter.getInstance().getFormattedTime(outputs.get(1)));
+            eegDataDTO.setRecordedDate(outputs.get(2));
+            eegDataDTO.setSignalImage(visualizationService.constructImage(outputs.get(3)));
+        }
         return eegDataDTO;
     }
 }

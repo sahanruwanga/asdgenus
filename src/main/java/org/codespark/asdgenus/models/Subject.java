@@ -9,6 +9,7 @@ import java.util.Set;
 @Entity
 public class Subject {
 
+    @TableGenerator(name = "subject", initialValue = 2500)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

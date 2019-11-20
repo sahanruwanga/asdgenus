@@ -10,6 +10,7 @@ public class EEGDataDTO {
     private String recordedDate;
     private String dataLocation;
     private String signalLocation;
+    private String signalImage;
 
     public EEGDataDTO(int id, int numberOfChannels, int subjectId, String[] channelNames,
                       String duration, String recordedDate, String dataLocation, String signalLocation) {
@@ -88,5 +89,13 @@ public class EEGDataDTO {
 
     public void setSignalLocation(String signalLocation) {
         this.signalLocation = signalLocation;
+    }
+
+    public String getSignalImage() {
+        return signalImage;
+    }
+
+    public void setSignalImage(String signalImage) {
+        this.signalImage = signalImage;
     }
 }
