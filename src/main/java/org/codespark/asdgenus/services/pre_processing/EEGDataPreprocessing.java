@@ -22,9 +22,10 @@ public class EEGDataPreprocessing {
 
         String pyPath = filePathFinder.getPreprocessPythonScript();
         String preprocessDataFile = filePathFinder.getPreprocessDataFile();
+        String venvPath = filePathFinder.getVenvLocation();
         String ret;
         ArrayList<String> prediction = new ArrayList<>();
-        ProcessBuilder processBuilder = new ProcessBuilder("python", pyPath, eegFilePath, preprocessDataFile);
+        ProcessBuilder processBuilder = new ProcessBuilder(venvPath, pyPath, eegFilePath, preprocessDataFile);
 
         Process process;
         try {

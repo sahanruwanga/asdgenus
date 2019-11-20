@@ -23,9 +23,10 @@ public class FeatureExtraction {
         String pyPath = filePathFinder.getFeatureExtractionPythonScript();
         String preprocessDataFile = filePathFinder.getPreprocessDataFile();
         String testDataFile = filePathFinder.getTestDataFile();
+        String venvPath = filePathFinder.getVenvLocation();
         String ret;
         ArrayList<String> prediction = new ArrayList<>();
-        ProcessBuilder processBuilder = new ProcessBuilder("python", pyPath, preprocessDataFile, testDataFile);
+        ProcessBuilder processBuilder = new ProcessBuilder(venvPath, pyPath, preprocessDataFile, testDataFile);
 
         Process process;
         try {

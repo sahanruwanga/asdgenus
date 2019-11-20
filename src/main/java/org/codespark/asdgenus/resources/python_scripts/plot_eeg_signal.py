@@ -8,7 +8,7 @@ eeg_path = sys.argv[1]
 
 raw_data = mne.io.read_raw_brainvision(eeg_path, preload=True)
 
-# raw_data.plot(duration=5, n_channels=32, title="Original Signal")
-image = mne.viz.plot_sensors(raw_data.info, show_names=True, show=False)
-image.savefig(sys.argv[2])
+mne.viz.plot_raw(raw_data, n_channels=32, show=False).savefig(sys.argv[2])
+# image.savefig(sys.argv[2])
+#image.savefig('/home/sahan/Desktop/sa.png')
 print("ok")

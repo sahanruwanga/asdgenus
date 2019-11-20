@@ -3,6 +3,8 @@ package org.codespark.asdgenus.utils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+
 @Component
 public class FilePathFinder {
 
@@ -40,18 +42,21 @@ public class FilePathFinder {
     private String naiveBayesModel;
 
     @Value("${eeg.signal.base-path}")
-    private String eegSignalBasePath;
+    private String storageLocation;
+
+    @Value("${venv.python}")
+    private String venvLocation;
 
     public String getTestPythonScript() {
-        return testPath;
+        return new File(testPath).getAbsolutePath();
     }
 
     public String getPreprocessPythonScript() {
-        return preprocessingScript;
+        return new File(preprocessingScript).getAbsolutePath();
     }
 
     public String getFeatureExtractionPythonScript() {
-        return featureExtractionScript;
+        return new File(featureExtractionScript).getAbsolutePath();
     }
 
     public String getPlotEEGScript() {
@@ -59,34 +64,38 @@ public class FilePathFinder {
     }
 
     public String getPreprocessDataFile() {
-        return preprocessDataFile;
+        return new File(preprocessDataFile).getAbsolutePath();
     }
 
     public String getTestDataFile() {
-        return testDataFile;
+        return new File(testDataFile).getAbsolutePath();
     }
 
     public String getTrainDataFile() {
-        return trainDataFile;
+        return new File(trainDataFile).getAbsolutePath();
     }
 
     public String getRandomForestModel() {
-        return randomForestModel;
+        return new File(randomForestModel).getAbsolutePath();
     }
 
     public String getLogisticRegressionModel() {
-        return logisticRegressionModel;
+        return new File(logisticRegressionModel).getAbsolutePath();
     }
 
     public String getMlpModel() {
-        return mlpModel;
+        return new File(mlpModel).getAbsolutePath();
     }
 
     public String getNaiveBayesModel() {
-        return naiveBayesModel;
+        return new File(naiveBayesModel).getAbsolutePath();
     }
 
-    public String getEegSignalBasePath() {
-        return eegSignalBasePath;
+    public String getStorageLocation() {
+        return new File(storageLocation).getAbsolutePath();
+    }
+
+    public String getVenvLocation() {
+        return new File(venvLocation).getAbsolutePath();
     }
 }

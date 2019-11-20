@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,11 +26,14 @@ public class VisualizationService {
     public String plotEEGSignal(int uid, String eegPath) {
 
         String pyPath = filePathFinder.getPlotEEGScript();
-        String signalLocation = filePathFinder.getEegSignalBasePath() + '/' +
-                uid + '/' + DateTimeGenerator.getInstance().getCurrentDateTime() + ".jpg";
+        String signalLocation = filePathFinder.getStorageLocation() + "/" +
+                uid + ".png";
+        String venvPath = filePathFinder.getVenvLocation();
+
         String ret;
         ArrayList<String> temp = new ArrayList<>();
-        ProcessBuilder processBuilder = new ProcessBuilder("python", pyPath, eegPath, signalLocation);
+        ProcessBuilder processBuilder = new ProcessBuilder().command(venvPath, pyPath, eegPath,
+                signalLocation);
 
         Process process;
         try {
@@ -44,6 +48,6 @@ public class VisualizationService {
         if (temp.size() != 0 && temp.get(0).equals("ok"))
             return signalLocation;
         else
-        return "";
+            return "";
     }
 }
