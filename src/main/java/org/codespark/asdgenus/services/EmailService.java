@@ -12,7 +12,7 @@ public class EmailService {
 
     public int sendMail(int uid, EmailDTO emailDTO) {
 
-        SendGrid sendGridClient = new SendGrid("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");
+        SendGrid sendGridClient = new SendGrid("*");
         Mail mail = new Mail(new Email(emailDTO.getFrom()), emailDTO.getSubject(),
                 new Email(emailDTO.getTo()), new Content("text/plain", emailDTO.getMessage()));
         mail.setReplyTo(new Email(emailDTO.getFrom()));
